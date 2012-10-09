@@ -11,7 +11,7 @@ var mixinFunctions = {
 		//if it isn't already, we need to mixin the FNMGroupSecurity
 		if(!thisNode.FNMGroupSecurity_Settings){
 			thisNode.mixin('FNMGroupSecurity', {}, function(){
-				console.log('Mixed In');
+				
 			});	
 		}
 		
@@ -26,10 +26,10 @@ var mixinFunctions = {
 						case 'init':
 							//leave well enough alonel
 							break;
-						case 'Security.Login': //the other end is attempting to login
+						case 'FNMAuthenticatedTunnels.Login': //the other end is attempting to login
 							return true;
 							break;
-						case 'Security.Logout': //the other end is attempting to login
+						case 'FNMAuthenticatedTunnels.Logout': //the other end is attempting to login
 							return true;
 							break;
 						default:
@@ -44,7 +44,7 @@ var mixinFunctions = {
 			}
 		});
 		
-		thisNode.on('Security.Login', function(message, rawMessage){
+		thisNode.on('FNMAuthenticatedTunnels.Login', function(message, rawMessage){
 			console.log('Security Auth Recieved');
 			console.log(message);
 			
@@ -52,9 +52,9 @@ var mixinFunctions = {
 				if(!err){
 					if(recs.length>0){
 						thisNode.TunnelManager.getTunnel(rawMessage._message.sender).isLoggedIn = true;
-						thisNode.sendEvent(rawMessage._message.sender, 'Security.LoginSuccessful', {name: recs[0].name});
+						thisNode.sendEvent(rawMessage._message.sender, 'FNMAuthenticatedTunnels.LoginSuccessful', {name: recs[0].name});
 					}else{
-						thisNode.sendEvent(rawMessage._message.sender, 'Security.LoginFailed', {});
+						thisNode.sendEvent(rawMessage._message.sender, 'FNMAuthenticatedTunnels.LoginFailed', {});
 					}
 				}
 			});
